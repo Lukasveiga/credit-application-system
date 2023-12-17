@@ -1,5 +1,6 @@
 package br.com.diobootcamp.credit.application.system.entities
 
+import br.com.diobootcamp.credit.application.system.entities.enummeration.Status
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.UUID
