@@ -1,4 +1,4 @@
-package br.com.diobootcamp.credit.application.system.services
+package br.com.diobootcamp.credit.application.system.services.credit
 
 import br.com.diobootcamp.credit.application.system.entities.Credit
 import java.util.UUID
