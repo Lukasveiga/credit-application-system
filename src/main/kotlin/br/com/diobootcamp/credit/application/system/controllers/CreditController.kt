@@ -26,13 +26,13 @@ class CreditController(private val creditService: CreditService) {
     }
 
     @GetMapping("/{customerId}")
-    fun findAllByCustomerId(@RequestParam customerId: Long): ResponseEntity<List<CreditViewList>> {
+    fun findAllByCustomerId(@PathVariable customerId: Long): ResponseEntity<List<CreditViewList>> {
         val creditViewList = this.creditService.findAllByCustomer(customerId).map { credit -> CreditViewList(credit) }
         return ResponseEntity.ok(creditViewList)
     }
 
-    @GetMapping("/{customerId}")
-    fun findByCreditCode(@RequestParam customerId: Long, @PathVariable creditCode: UUID): ResponseEntity<CreditView> {
+    @GetMapping("/credit/{creditCode}")
+    fun findByCreditCode(@RequestParam(value = "customerId") customerId: Long, @PathVariable creditCode: UUID): ResponseEntity<CreditView> {
         val credit = this.creditService.findByCreditCode(customerId, creditCode)
         return ResponseEntity.ok(CreditView(credit))
     }
