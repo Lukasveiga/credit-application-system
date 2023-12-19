@@ -1,4 +1,4 @@
-package br.com.diobootcamp.credit.application.system.dto
+package br.com.diobootcamp.credit.application.system.dto.customer
 
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import java.math.BigDecimal

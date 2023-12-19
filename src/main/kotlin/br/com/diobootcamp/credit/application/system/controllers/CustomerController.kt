@@ -1,8 +1,8 @@
 package br.com.diobootcamp.credit.application.system.controllers
 
-import br.com.diobootcamp.credit.application.system.dto.CustomerDTO
-import br.com.diobootcamp.credit.application.system.dto.CustomerUpdateDTO
-import br.com.diobootcamp.credit.application.system.dto.CustomerView
+import br.com.diobootcamp.credit.application.system.dto.customer.CustomerDTO
+import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateDTO
+import br.com.diobootcamp.credit.application.system.dto.customer.CustomerView
 import br.com.diobootcamp.credit.application.system.services.customer.CustomerService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

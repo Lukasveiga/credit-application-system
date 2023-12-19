@@ -1,6 +1,6 @@
 package br.com.diobootcamp.credit.application.system.services.customer
 
-import br.com.diobootcamp.credit.application.system.dto.CustomerUpdateDTO
+import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateDTO
 import br.com.diobootcamp.credit.application.system.entities.Customer
 
 interface CustomerService {
