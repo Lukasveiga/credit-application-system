@@ -1,16 +1,19 @@
 package br.com.diobootcamp.credit.application.system.controllers
 
 import br.com.diobootcamp.credit.application.system.dto.CustomerDTO
+import br.com.diobootcamp.credit.application.system.dto.CustomerUpdateDTO
 import br.com.diobootcamp.credit.application.system.dto.CustomerView
 import br.com.diobootcamp.credit.application.system.services.customer.CustomerService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -27,6 +30,12 @@ class CustomerController(private val customerService: CustomerService) {
     fun findById(@PathVariable customerId: Long): ResponseEntity<CustomerView> {
         val customer = this.customerService.findById(customerId)
         return ResponseEntity.ok(CustomerView(customer))
+    }
+
+    @PatchMapping
+    fun updateCustomer(@RequestParam(value = "customerId") customerId: Long, @RequestBody customerUpdateDTO: CustomerUpdateDTO): ResponseEntity<CustomerView> {
+        val updatedCustomer = this.customerService.update(customerId, customerUpdateDTO)
+        return ResponseEntity.ok(CustomerView(updatedCustomer))
     }
 
     @DeleteMapping("/{id}")
