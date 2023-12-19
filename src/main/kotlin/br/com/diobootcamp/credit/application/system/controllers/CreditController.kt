@@ -1,6 +1,7 @@
 package br.com.diobootcamp.credit.application.system.controllers
 
 import br.com.diobootcamp.credit.application.system.dto.credit.CreditDTO
+import br.com.diobootcamp.credit.application.system.dto.credit.CreditView
 import br.com.diobootcamp.credit.application.system.dto.credit.CreditViewList
 import br.com.diobootcamp.credit.application.system.services.credit.CreditService
 import org.springframework.http.HttpStatus
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
 @RequestMapping("api/v1/credits")
@@ -27,5 +29,11 @@ class CreditController(private val creditService: CreditService) {
     fun findAllByCustomerId(@RequestParam customerId: Long): ResponseEntity<List<CreditViewList>> {
         val creditViewList = this.creditService.findAllByCustomer(customerId).map { credit -> CreditViewList(credit) }
         return ResponseEntity.ok(creditViewList)
+    }
+
+    @GetMapping("/{customerId}")
+    fun findByCreditCode(@RequestParam customerId: Long, @PathVariable creditCode: UUID): ResponseEntity<CreditView> {
+        val credit = this.creditService.findByCreditCode(customerId, creditCode)
+        return ResponseEntity.ok(CreditView(credit))
     }
 }
