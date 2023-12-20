@@ -26,7 +26,7 @@ class CustomerController(private val customerService: CustomerService) {
         return ResponseEntity.status(HttpStatus.CREATED).body("Customer ${savedCustomer.email} saved!")
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{customerId}")
     fun findById(@PathVariable customerId: Long): ResponseEntity<CustomerView> {
         val customer = this.customerService.findById(customerId)
         return ResponseEntity.ok(CustomerView(customer))
@@ -38,9 +38,9 @@ class CustomerController(private val customerService: CustomerService) {
         return ResponseEntity.ok(CustomerView(updatedCustomer))
     }
 
-    @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable customerId: Long): ResponseEntity.BodyBuilder {
+    @DeleteMapping("/{customerId}")
+    fun deleteById(@PathVariable customerId: Long): ResponseEntity<Unit> {
         this.customerService.delete(customerId)
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+        return ResponseEntity.noContent().build()
     }
 }
