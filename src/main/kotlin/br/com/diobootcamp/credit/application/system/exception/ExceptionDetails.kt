@@ -7,5 +7,5 @@ data class ExceptionDetails(
     val timestamp: LocalDateTime,
     val satus: Int,
     val exception: String,
-    val details: MutableMap<String, String>
+    val details: MutableMap<String, String?>
 )
