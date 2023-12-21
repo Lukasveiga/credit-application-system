@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+  pg-docker:
+    image: postgres:14-alpine
+    container_name: test-postgresql
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    ports:
+      - 5433:5432
