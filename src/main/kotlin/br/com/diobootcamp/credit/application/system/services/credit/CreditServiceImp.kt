@@ -5,11 +5,13 @@ import br.com.diobootcamp.credit.application.system.repositories.CreditRepositor
 import br.com.diobootcamp.credit.application.system.services.customer.CustomerService
 import br.com.diobootcamp.credit.application.system.services.exceptions.BusinessExcetion
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import java.util.*
 
 @Service
 class CreditServiceImp(private val creditRepository: CreditRepository, private val customerService: CustomerService): CreditService {
     override fun save(credit: Credit): Credit {
+        this.validateDayFirstOfInstallment(credit.dayFirstInstallment)
         credit.apply {
             customer = customerService.findById(credit.customer?.id!!)
         }
@@ -25,5 +27,10 @@ class CreditServiceImp(private val creditRepository: CreditRepository, private v
         val credit = this.creditRepository.findByCreditCode(creditCode) ?: throw BusinessExcetion("Credit code $creditCode not found")
 
         return if (credit.customer?.id == customerId) credit else throw BusinessExcetion("Contact admin")
+    }
+
+    private fun validateDayFirstOfInstallment(dayFirstOfInstallment: LocalDate): Boolean {
+        return if (dayFirstOfInstallment.isBefore(LocalDate.now().plusMonths(3))) true
+        else throw BusinessExcetion("Invalid Date")
     }
 }

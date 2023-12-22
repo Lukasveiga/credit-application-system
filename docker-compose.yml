@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-  pg-docker:
+  db-test:
     image: postgres:14-alpine
     container_name: test-postgresql
     environment:
