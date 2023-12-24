@@ -1,5 +1,6 @@
 package br.com.diobootcamp.credit.application.system.services.customer
 
+import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateDTO
 import br.com.diobootcamp.credit.application.system.entities.Address
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
@@ -68,5 +69,24 @@ class CustomerServiceImpTest {
         Assertions.assertThatExceptionOfType(BusinessExcetion::class.java)
             .isThrownBy { customerServiceImp.findById(idTest) }
             .withMessage("Id $idTest not found")
+        verify(exactly = 1) { customerRepository.findById(idTest) }
+    }
+
+    @Test
+    fun shouldUpdateCustomer() {
+        // given
+        val idTest: Long = Random().nextLong()
+        val customerTest: Customer = Tools.buildCustomer()
+        val customerUpdateDTOTest: CustomerUpdateDTO = Tools.buildCustomerUpdateDTO()
+        every { customerRepository.findById(idTest) } returns Optional.of(customerTest)
+        every { customerRepository.save(any()) } returns customerTest
+        // When
+        val actual: Customer = customerServiceImp.update(idTest, customerUpdateDTOTest)
+        // Then
+        Assertions.assertThat(actual).isNotNull
+        Assertions.assertThat(actual).isExactlyInstanceOf(Customer::class.java)
+        Assertions.assertThat(actual).isSameAs(customerUpdateDTOTest.toEntity(customerTest))
+        verify(exactly = 1) { customerRepository.findById(idTest) }
+        verify(exactly = 1) { customerRepository.save(customerTest) }
     }
 }
