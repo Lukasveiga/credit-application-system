@@ -3,6 +3,7 @@ package br.com.diobootcamp.credit.application.system.services.customer
 import br.com.diobootcamp.credit.application.system.entities.Address
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
+import br.com.diobootcamp.credit.application.system.services.exceptions.BusinessExcetion
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
@@ -45,16 +46,27 @@ class CustomerServiceImpTest {
 
     @Test
     fun shouldFindCustomerById() {
-        //given
+        // given
         val idTest: Long = Random().nextLong()
         val customerTest: Customer = Tools.buildCustomer(id = idTest)
         every { customerRepository.findById(idTest) } returns Optional.of(customerTest)
-        //when
+        // when
         val actual: Customer = customerServiceImp.findById(idTest)
-        //then
+        // then
         Assertions.assertThat(actual).isNotNull
         Assertions.assertThat(actual).isExactlyInstanceOf(Customer::class.java)
         Assertions.assertThat(actual).isSameAs(customerTest)
         verify(exactly = 1) { customerRepository.findById(idTest) }
+    }
+
+    @Test
+    fun shouldNotFindCustomerByIdAndThrowBusinessException() {
+        // given
+        val idTest: Long = Random().nextLong()
+        every { customerRepository.findById(idTest) } returns Optional.empty()
+        // when - then
+        Assertions.assertThatExceptionOfType(BusinessExcetion::class.java)
+            .isThrownBy { customerServiceImp.findById(idTest) }
+            .withMessage("Id $idTest not found")
     }
 }
