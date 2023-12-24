@@ -33,7 +33,7 @@ class CustomerServiceImpTest {
     @Test
     fun shouldCreateCustomer() {
         // given
-        val customerTest: Customer = buildCustomer()
+        val customerTest: Customer = Tools.buildCustomer()
         every { customerRepository.save(any()) } returns customerTest
         // when
         val actual = customerServiceImp.save(customerTest)
@@ -47,7 +47,7 @@ class CustomerServiceImpTest {
     fun shouldFindCustomerById() {
         //given
         val idTest: Long = Random().nextLong()
-        val customerTest: Customer = buildCustomer(id = idTest)
+        val customerTest: Customer = Tools.buildCustomer(id = idTest)
         every { customerRepository.findById(idTest) } returns Optional.of(customerTest)
         //when
         val actual: Customer = customerServiceImp.findById(idTest)
@@ -57,27 +57,4 @@ class CustomerServiceImpTest {
         Assertions.assertThat(actual).isSameAs(customerTest)
         verify(exactly = 1) { customerRepository.findById(idTest) }
     }
-
-    private fun buildCustomer(
-        firstName: String = "Lukas",
-        lastName: String = "Veiga",
-        cpf: String = "883.799.550-48",
-        email: String = "test@email.com",
-        password: String = "testPassword",
-        zipCode: String = "13545",
-        street: String = "Rua Dois Terços",
-        income: BigDecimal = BigDecimal(0),
-        id: Long = 1
-    ) = Customer(
-        firstName = firstName,
-        lastName = lastName,
-        cpf = cpf,
-        email = email,
-        password = password,
-        address = Address(
-            zipCode = zipCode,
-            street = street
-        ),
-        income = income,
-    )
 }
