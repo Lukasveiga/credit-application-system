@@ -89,4 +89,18 @@ class CustomerServiceImpTest {
         verify(exactly = 1) { customerRepository.findById(idTest) }
         verify(exactly = 1) { customerRepository.save(customerTest) }
     }
+    
+    @Test
+    fun shouldNotUpdateCostumerAndThrowBusinessException() {
+        // given
+        val idTest: Long = Random().nextLong()
+        val customerUpdateDTOTest: CustomerUpdateDTO = Tools.buildCustomerUpdateDTO()
+        every { customerRepository.findById(idTest) } returns Optional.empty()
+        // when - then
+        Assertions.assertThatExceptionOfType(BusinessExcetion::class.java)
+            .isThrownBy { customerServiceImp.update(idTest, customerUpdateDTOTest) }
+            .withMessage("Id $idTest not found")
+        verify(exactly = 1) { customerRepository.findById(idTest) }
+        verify(exactly = 0) { customerRepository.save(any()) }
+    }
 }
