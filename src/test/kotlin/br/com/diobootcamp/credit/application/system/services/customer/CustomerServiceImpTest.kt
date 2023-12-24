@@ -114,4 +114,17 @@ class CustomerServiceImpTest {
         verify(exactly = 1) { customerRepository.findById(idTest) }
         verify(exactly = 1) { customerRepository.deleteById(idTest) }
     }
+
+    @Test
+    fun shouldNotDeleteCostumerAndThrowBusinessException() {
+        // given
+        val idTest: Long = Random().nextLong()
+        every { customerRepository.findById(idTest) } returns Optional.empty()
+        // when - then
+        Assertions.assertThatExceptionOfType(BusinessExcetion::class.java)
+            .isThrownBy { customerServiceImp.delete(idTest) }
+            .withMessage("Id $idTest not found")
+        verify(exactly = 1) { customerRepository.findById(idTest) }
+        verify(exactly = 0) { customerRepository.deleteById(any()) }
+    }
 }
