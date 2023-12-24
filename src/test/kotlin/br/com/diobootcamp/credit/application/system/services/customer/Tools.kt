@@ -1,5 +1,6 @@
 package br.com.diobootcamp.credit.application.system.services.customer
 
+import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateDTO
 import br.com.diobootcamp.credit.application.system.entities.Address
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import java.math.BigDecimal
@@ -29,5 +30,19 @@ internal class Tools {
         ),
         income = income,
     )
+
+        fun buildCustomerUpdateDTO(
+            firstName: String = "Lukas",
+            lastName: String = "Veiga",
+            zipCode: String = "13545",
+            street: String = "Rua Dois Terços",
+            income: BigDecimal = BigDecimal(0)
+        ) = CustomerUpdateDTO(
+            firstName = firstName,
+            lastName = lastName,
+            zipCode = zipCode,
+            street = street,
+            income = income
+        )
     }
 }
