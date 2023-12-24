@@ -5,11 +5,8 @@ import br.com.diobootcamp.credit.application.system.entities.Address
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
 import br.com.diobootcamp.credit.application.system.services.exceptions.BusinessExcetion
-import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.*
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
-import io.mockk.verify
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -102,5 +99,19 @@ class CustomerServiceImpTest {
             .withMessage("Id $idTest not found")
         verify(exactly = 1) { customerRepository.findById(idTest) }
         verify(exactly = 0) { customerRepository.save(any()) }
+    }
+
+    @Test
+    fun shouldDeleteCustomerById() {
+        // given
+        val idTest: Long = Random().nextLong()
+        val customerTest: Customer = Tools.buildCustomer()
+        every { customerRepository.findById(idTest) } returns Optional.of(customerTest)
+        every { customerRepository.deleteById(idTest) } just runs
+        // when
+        customerServiceImp.delete(idTest)
+        // then
+        verify(exactly = 1) { customerRepository.findById(idTest) }
+        verify(exactly = 1) { customerRepository.deleteById(idTest) }
     }
 }
