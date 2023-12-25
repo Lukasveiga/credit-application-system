@@ -1,7 +1,6 @@
 package br.com.diobootcamp.credit.application.system.services.customer
 
 import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateDTO
-import br.com.diobootcamp.credit.application.system.entities.Address
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
 import br.com.diobootcamp.credit.application.system.services.exceptions.BusinessExcetion
@@ -11,12 +10,9 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.test.context.ActiveProfiles
-import java.math.BigDecimal
 import java.util.Optional
 import java.util.Random
 
-@ActiveProfiles("test")
 @ExtendWith(MockKExtension::class)
 class CustomerServiceImpTest {
 
