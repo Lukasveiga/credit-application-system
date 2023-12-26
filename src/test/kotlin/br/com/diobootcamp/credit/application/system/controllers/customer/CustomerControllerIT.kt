@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @ContextConfiguration
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class CustomerControllerIT {
 
     @Autowired
@@ -63,7 +65,7 @@ class CustomerControllerIT {
             .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(customerDTO.email))
             .andExpect(MockMvcResultMatchers.jsonPath("$.zipCode").value(customerDTO.zipCode))
             .andExpect(MockMvcResultMatchers.jsonPath("$.street").value(customerDTO.street))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.street").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
             .andDo(MockMvcResultHandlers.print())
     }
 
@@ -102,5 +104,26 @@ class CustomerControllerIT {
             .andExpect(MockMvcResultMatchers.jsonPath("$.exception").value("MethodArgumentNotValidException"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.details.firstName").value("Invalid input"))
             .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun shouldFindCustomerByIdAndReturn200StatusCode() {
+        // given
+        val customerDTO: CustomerDTO = Tools.buildCustomerDTO()
+        customerRepository.save(customerDTO.toEntity())
+        val customerId: Long = 1L
+        // when - then
+        mockMvc.perform(MockMvcRequestBuilders.get("$URL/$customerId")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(customerDTO.firstName))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(customerDTO.lastName))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.cpf").value(customerDTO.cpf))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(customerDTO.email))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.zipCode").value(customerDTO.zipCode))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.street").value(customerDTO.street))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+            .andDo(MockMvcResultHandlers.print())
+
     }
 }
