@@ -1,4 +1,4 @@
-package br.com.diobootcamp.credit.application.system.controllers
+package br.com.diobootcamp.credit.application.system.controllers.customer
 
 import br.com.diobootcamp.credit.application.system.dto.customer.CustomerDTO
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
