@@ -8,7 +8,7 @@ import java.math.BigDecimal
 internal class Tools {
 
     companion object {
-        fun buildCustomer(
+        fun builderCustomer(
         firstName: String = "Lukas",
         lastName: String = "Veiga",
         cpf: String = "883.799.550-48",
@@ -31,7 +31,7 @@ internal class Tools {
         income = income,
     )
 
-        fun buildCustomerUpdateDTO(
+        fun builderCustomerUpdateDTO(
             firstName: String = "Lukas",
             lastName: String = "Veiga",
             zipCode: String = "13545",

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -54,7 +53,7 @@ class CustomerControllerIT {
     @Test
     fun shouldCreateCustomerAndReturn201StatusCode() {
         // given
-        val customerDTO: CustomerDTO = Tools.buildCustomerDTO()
+        val customerDTO: CustomerDTO = Tools.builderCustomerDTO()
         val customerDTOAsString: String = objectMapper.writeValueAsString(customerDTO)
         // when - then
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
@@ -74,8 +73,8 @@ class CustomerControllerIT {
     @Test
     fun shouldNotSaveCustomerWithCPFAndReturn409StatusCode() {
         // given
-        customerRepository.save(Tools.buildCustomerDTO().toEntity())
-        val customerDTO: CustomerDTO = Tools.buildCustomerDTO()
+        customerRepository.save(Tools.builderCustomerDTO().toEntity())
+        val customerDTO: CustomerDTO = Tools.builderCustomerDTO()
         val customerDTOAsString: String = objectMapper.writeValueAsString(customerDTO)
         // when - then
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
@@ -93,7 +92,7 @@ class CustomerControllerIT {
     @Test
     fun shouldNotSaveCustomerWithFirstNameEmptyAndReturn400StatusCode() {
         // given
-        val customerDTO: CustomerDTO = Tools.buildCustomerDTO(firstName = "")
+        val customerDTO: CustomerDTO = Tools.builderCustomerDTO(firstName = "")
         val customerDTOAsString: String = objectMapper.writeValueAsString(customerDTO)
         // when - then
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
@@ -111,7 +110,7 @@ class CustomerControllerIT {
     @Test
     fun shouldFindCustomerByIdAndReturn200StatusCode() {
         // given
-        val customerDTO: CustomerDTO = Tools.buildCustomerDTO()
+        val customerDTO: CustomerDTO = Tools.builderCustomerDTO()
         customerRepository.save(customerDTO.toEntity())
         val customerId: Long = 1L
         // when - then
@@ -131,23 +130,23 @@ class CustomerControllerIT {
     @Test
     fun shouldNotFindCustomerByIdWithInvalidIdAndReturn400StatusCode() {
         // given
-        val customerId: Long = 5L
+        val invalidId: Long = 5L
         // when - then
-        mockMvc.perform(MockMvcRequestBuilders.get("$URL/$customerId")
+        mockMvc.perform(MockMvcRequestBuilders.get("$URL/$invalidId")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Bad Request. Consult documentation"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists())
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.exception").value("BusinessExcetion"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.details.null").value("Id $customerId not found"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.details.null").value("Id $invalidId not found"))
             .andDo(MockMvcResultHandlers.print())
     }
 
     @Test
     fun shouldDeleteCustomerByIdAndReturn204StatusCode() {
         // given
-        val customerSaved: Customer = customerRepository.save(Tools.buildCustomerDTO().toEntity())
+        val customerSaved: Customer = customerRepository.save(Tools.builderCustomerDTO().toEntity())
         // when - then
         mockMvc.perform(MockMvcRequestBuilders.delete("$URL/${customerSaved.id}")
             .accept(MediaType.APPLICATION_JSON))
@@ -158,16 +157,16 @@ class CustomerControllerIT {
     @Test
     fun shouldNotDeleteCustomerByIdWithInvalidIdAndReturn400StatusCode() {
         // given
-        val customerId: Long = 5L
+        val invalidId: Long = 5L
         // when - then
-        mockMvc.perform(MockMvcRequestBuilders.delete("$URL/$customerId")
+        mockMvc.perform(MockMvcRequestBuilders.delete("$URL/$invalidId")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Bad Request. Consult documentation"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists())
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.exception").value("BusinessExcetion"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.details.null").value("Id $customerId not found"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.details.null").value("Id $invalidId not found"))
             .andDo(MockMvcResultHandlers.print())
     }
 }

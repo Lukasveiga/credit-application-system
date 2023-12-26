@@ -10,7 +10,7 @@ import java.time.Month
 internal class Tools {
 
     companion object {
-        fun buildCredit(
+        fun builderCredit(
             creditValue: BigDecimal = BigDecimal.valueOf(500.0),
             dayFirstInstallment: LocalDate = LocalDate.of(2023, Month.DECEMBER, 26),
             numberOfInstallments: Int = 5,
@@ -22,7 +22,7 @@ internal class Tools {
             customer = customer
         )
 
-        fun buildCustomer(
+        fun builderCustomer(
             firstName: String = "Lukas",
             lastName: String = "Veiga",
             cpf: String = "883.799.550-48",
