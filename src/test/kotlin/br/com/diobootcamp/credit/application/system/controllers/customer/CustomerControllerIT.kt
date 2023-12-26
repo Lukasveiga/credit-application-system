@@ -1,11 +1,13 @@
 package br.com.diobootcamp.credit.application.system.controllers.customer
 
 import br.com.diobootcamp.credit.application.system.dto.customer.CustomerDTO
+import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -139,6 +141,17 @@ class CustomerControllerIT {
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.exception").value("BusinessExcetion"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.details.null").value("Id $customerId not found"))
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun shouldDeleteCustomerByIdAndReturn204StatusCode() {
+        // given
+        val customerSaved: Customer = customerRepository.save(Tools.buildCustomerDTO().toEntity())
+        // when - then
+        mockMvc.perform(MockMvcRequestBuilders.delete("$URL/${customerSaved.id}")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isNoContent)
             .andDo(MockMvcResultHandlers.print())
     }
 }
