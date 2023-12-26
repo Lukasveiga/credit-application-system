@@ -27,7 +27,7 @@ class RestExceptionHandler {
             ExceptionDetails(
                 title = "Bad Request. Consult documentation",
                 timestamp = LocalDateTime.now(),
-                satus = HttpStatus.BAD_REQUEST.value(),
+                status = HttpStatus.BAD_REQUEST.value(),
                 exception = ex.javaClass.simpleName.toString(),
                 details = errors
             ), HttpStatus.BAD_REQUEST
@@ -40,7 +40,7 @@ class RestExceptionHandler {
             ExceptionDetails(
                 title = "Bad Request. Consult documentation",
                 timestamp = LocalDateTime.now(),
-                satus = HttpStatus.CONFLICT.value(),
+                status = HttpStatus.CONFLICT.value(),
                 exception = ex.javaClass.simpleName.toString(),
                 details = mutableMapOf(ex.cause.toString() to ex.message.toString())
             ), HttpStatus.CONFLICT
@@ -53,7 +53,7 @@ class RestExceptionHandler {
             ExceptionDetails(
                 title = "Bad Request. Consult documentation",
                 timestamp = LocalDateTime.now(),
-                satus = HttpStatus.BAD_REQUEST.value(),
+                status = HttpStatus.BAD_REQUEST.value(),
                 exception = ex.javaClass.simpleName.toString(),
                 details = mutableMapOf(ex.cause.toString() to ex.message.toString())
             ), HttpStatus.BAD_REQUEST
