@@ -85,4 +85,22 @@ class CustomerControllerIT {
             .andExpect(MockMvcResultMatchers.jsonPath("$.details[*]").isNotEmpty)
             .andDo(MockMvcResultHandlers.print())
     }
+
+    @Test
+    fun shouldNotSaveCustomerWithFirstNameEmptyAndReturn400StatusCode() {
+        // given
+        val customerDTO: CustomerDTO = Tools.buildCustomerDTO(firstName = "")
+        val customerDTOAsString: String = objectMapper.writeValueAsString(customerDTO)
+        // when - then
+        mockMvc.perform(MockMvcRequestBuilders.post(URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(customerDTOAsString))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Bad Request. Consult documentation"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.exception").value("MethodArgumentNotValidException"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.details.firstName").value("Invalid input"))
+            .andDo(MockMvcResultHandlers.print())
+    }
 }
