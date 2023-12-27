@@ -28,7 +28,7 @@ class CustomerServiceImpTest {
     @Test
     fun shouldCreateCustomer() {
         // given
-        val customerTest: Customer = Tools.buildCustomer()
+        val customerTest: Customer = Tools.builderCustomer()
         every { customerRepository.save(any()) } returns customerTest
         // when
         val actual = customerServiceImp.save(customerTest)
@@ -42,7 +42,7 @@ class CustomerServiceImpTest {
     fun shouldFindCustomerById() {
         // given
         val idTest: Long = Random().nextLong()
-        val customerTest: Customer = Tools.buildCustomer(id = idTest)
+        val customerTest: Customer = Tools.builderCustomer(id = idTest)
         every { customerRepository.findById(idTest) } returns Optional.of(customerTest)
         // when
         val actual: Customer = customerServiceImp.findById(idTest)
@@ -69,8 +69,8 @@ class CustomerServiceImpTest {
     fun shouldUpdateCustomer() {
         // given
         val idTest: Long = Random().nextLong()
-        val customerTest: Customer = Tools.buildCustomer()
-        val customerUpdateDTOTest: CustomerUpdateDTO = Tools.buildCustomerUpdateDTO()
+        val customerTest: Customer = Tools.builderCustomer()
+        val customerUpdateDTOTest: CustomerUpdateDTO = Tools.builderCustomerUpdateDTO()
         every { customerRepository.findById(idTest) } returns Optional.of(customerTest)
         every { customerRepository.save(any()) } returns customerTest
         // When
@@ -87,7 +87,7 @@ class CustomerServiceImpTest {
     fun shouldNotUpdateCostumerAndThrowBusinessException() {
         // given
         val idTest: Long = Random().nextLong()
-        val customerUpdateDTOTest: CustomerUpdateDTO = Tools.buildCustomerUpdateDTO()
+        val customerUpdateDTOTest: CustomerUpdateDTO = Tools.builderCustomerUpdateDTO()
         every { customerRepository.findById(idTest) } returns Optional.empty()
         // when - then
         Assertions.assertThatExceptionOfType(BusinessExcetion::class.java)
@@ -101,7 +101,7 @@ class CustomerServiceImpTest {
     fun shouldDeleteCustomerById() {
         // given
         val idTest: Long = Random().nextLong()
-        val customerTest: Customer = Tools.buildCustomer()
+        val customerTest: Customer = Tools.builderCustomer()
         every { customerRepository.findById(idTest) } returns Optional.of(customerTest)
         every { customerRepository.deleteById(idTest) } just runs
         // when
