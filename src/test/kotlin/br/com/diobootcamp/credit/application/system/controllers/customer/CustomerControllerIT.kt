@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import kotlin.random.Random
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -189,4 +190,24 @@ class CustomerControllerIT {
             .andExpect(MockMvcResultMatchers.jsonPath("$.income").value(customerUpdateDTO.income))
             .andDo(MockMvcResultHandlers.print())
     }
+
+    @Test
+    fun shouldNotUpdateCustomerAndReturn400StatusCode() {
+        // given
+        val invalidId: Long = Random.nextLong()
+        val customerUpdateDTO: CustomerUpdateDTO = Tools.builderCustomerUpdateDTO()
+        val customerUpdateDTOAsString: String = objectMapper.writeValueAsString(customerUpdateDTO)
+        // when - then
+        mockMvc.perform(MockMvcRequestBuilders.patch("$URL?customerId=$invalidId")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(customerUpdateDTOAsString))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Bad Request. Consult documentation"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.exception").value("BusinessExcetion"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.details.null").value("Id $invalidId not found"))
+            .andDo(MockMvcResultHandlers.print())
+    }
+
 }
