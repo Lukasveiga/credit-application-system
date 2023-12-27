@@ -1,6 +1,7 @@
 package br.com.diobootcamp.credit.application.system.controllers.customer
 
 import br.com.diobootcamp.credit.application.system.dto.customer.CustomerDTO
+import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateDTO
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -167,6 +168,25 @@ class CustomerControllerIT {
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.exception").value("BusinessExcetion"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.details.null").value("Id $invalidId not found"))
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun shouldUpdateCustomerAndReturn200StatusCode() {
+        // given
+        val customerSaved: Customer = customerRepository.save(Tools.builderCustomerDTO().toEntity())
+        val customerUpdateDTO: CustomerUpdateDTO = Tools.builderCustomerUpdateDTO()
+        val customerUpdateDTOAsString: String = objectMapper.writeValueAsString(customerUpdateDTO)
+        // when - then
+        mockMvc.perform(MockMvcRequestBuilders.patch("$URL?customerId=${customerSaved.id}")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(customerUpdateDTOAsString))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(customerUpdateDTO.firstName))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(customerUpdateDTO.lastName))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.zipCode").value(customerUpdateDTO.zipCode))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.street").value(customerUpdateDTO.street))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.income").value(customerUpdateDTO.income))
             .andDo(MockMvcResultHandlers.print())
     }
 }
