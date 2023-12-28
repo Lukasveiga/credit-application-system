@@ -4,6 +4,7 @@ import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateD
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
 import br.com.diobootcamp.credit.application.system.services.exceptions.BusinessExcetion
+import br.com.diobootcamp.credit.application.system.services.exceptions.CustomerNotFoundException
 import io.mockk.*
 import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions
@@ -54,12 +55,12 @@ class CustomerServiceImpTest {
     }
 
     @Test
-    fun shouldNotFindCustomerByIdAndThrowBusinessException() {
+    fun shouldNotFindCustomerByIdAndThrowCustomerNotFoundException() {
         // given
         val idTest: Long = Random().nextLong()
         every { customerRepository.findById(idTest) } returns Optional.empty()
         // when - then
-        Assertions.assertThatExceptionOfType(BusinessExcetion::class.java)
+        Assertions.assertThatExceptionOfType(CustomerNotFoundException::class.java)
             .isThrownBy { customerServiceImp.findById(idTest) }
             .withMessage("Id $idTest not found")
         verify(exactly = 1) { customerRepository.findById(idTest) }
@@ -84,13 +85,13 @@ class CustomerServiceImpTest {
     }
     
     @Test
-    fun shouldNotUpdateCostumerAndThrowBusinessException() {
+    fun shouldNotUpdateCostumerAndThrowCustomerNotFoundException() {
         // given
         val idTest: Long = Random().nextLong()
         val customerUpdateDTOTest: CustomerUpdateDTO = Tools.builderCustomerUpdateDTO()
         every { customerRepository.findById(idTest) } returns Optional.empty()
         // when - then
-        Assertions.assertThatExceptionOfType(BusinessExcetion::class.java)
+        Assertions.assertThatExceptionOfType(CustomerNotFoundException::class.java)
             .isThrownBy { customerServiceImp.update(idTest, customerUpdateDTOTest) }
             .withMessage("Id $idTest not found")
         verify(exactly = 1) { customerRepository.findById(idTest) }
@@ -112,12 +113,12 @@ class CustomerServiceImpTest {
     }
 
     @Test
-    fun shouldNotDeleteCostumerAndThrowBusinessException() {
+    fun shouldNotDeleteCostumerAndThrowCustomerNotFoundException() {
         // given
         val idTest: Long = Random().nextLong()
         every { customerRepository.findById(idTest) } returns Optional.empty()
         // when - then
-        Assertions.assertThatExceptionOfType(BusinessExcetion::class.java)
+        Assertions.assertThatExceptionOfType(CustomerNotFoundException::class.java)
             .isThrownBy { customerServiceImp.delete(idTest) }
             .withMessage("Id $idTest not found")
         verify(exactly = 1) { customerRepository.findById(idTest) }
