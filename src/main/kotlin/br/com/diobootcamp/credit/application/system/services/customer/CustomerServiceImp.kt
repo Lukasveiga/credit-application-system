@@ -4,6 +4,7 @@ import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateD
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
 import br.com.diobootcamp.credit.application.system.services.exceptions.BusinessExcetion
+import br.com.diobootcamp.credit.application.system.services.exceptions.CustomerNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,7 +14,7 @@ class CustomerServiceImp(private val customerRepository: CustomerRepository): Cu
 
     override fun findById(customerId: Long): Customer =
         this.customerRepository.findById(customerId)
-            .orElseThrow { throw BusinessExcetion("Id $customerId not found") }
+            .orElseThrow { throw CustomerNotFoundException("Id $customerId not found") }
 
     override fun update(customerId: Long, customerUpdateDTO: CustomerUpdateDTO): Customer {
         val customer = this.findById(customerId)
