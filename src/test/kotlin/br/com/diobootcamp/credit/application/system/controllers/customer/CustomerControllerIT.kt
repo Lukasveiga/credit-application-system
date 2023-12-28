@@ -73,7 +73,7 @@ class CustomerControllerIT {
     }
 
     @Test
-    fun shouldNotSaveCustomerWithCPFAndReturn409StatusCode() {
+    fun shouldNotSaveCustomerWithExistingCPFAndReturn409StatusCode() {
         // given
         customerRepository.save(Tools.builderCustomerDTO().toEntity())
         val customerDTO: CustomerDTO = Tools.builderCustomerDTO()
