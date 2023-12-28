@@ -3,6 +3,8 @@ package br.com.diobootcamp.credit.application.system.repositories.credit
 import br.com.diobootcamp.credit.application.system.entities.Credit
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CreditRepository
+import br.com.diobootcamp.credit.application.system.tools.CreditTools
+import br.com.diobootcamp.credit.application.system.tools.CustomerTools
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,9 +29,9 @@ class CreditRepositoryTest {
 
     @BeforeEach
     fun setUp() {
-        customer = testEntityManager.persist(Tools.builderCustomer())
-        credit1 = testEntityManager.persist(Tools.builderCredit(customer = customer))
-        credit2 = testEntityManager.persist(Tools.builderCredit(customer = customer))
+        customer = testEntityManager.persist(CustomerTools.builderCustomer())
+        credit1 = testEntityManager.persist(CreditTools.builderCredit(customer = customer))
+        credit2 = testEntityManager.persist(CreditTools.builderCredit(customer = customer))
     }
 
     @Test
