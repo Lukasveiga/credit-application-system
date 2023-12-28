@@ -4,6 +4,7 @@ import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateD
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
 import br.com.diobootcamp.credit.application.system.services.exceptions.CustomerNotFoundException
+import br.com.diobootcamp.credit.application.system.tools.CustomerTools
 import io.mockk.*
 import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions
@@ -28,7 +29,7 @@ class CustomerServiceImpTest {
     @Test
     fun shouldCreateCustomer() {
         // given
-        val customerTest: Customer = Tools.builderCustomer()
+        val customerTest: Customer = CustomerTools.builderCustomer()
         every { customerRepository.save(any()) } returns customerTest
         // when
         val actual = customerServiceImp.save(customerTest)
@@ -42,7 +43,7 @@ class CustomerServiceImpTest {
     fun shouldFindCustomerById() {
         // given
         val idTest: Long = Random().nextLong()
-        val customerTest: Customer = Tools.builderCustomer(id = idTest)
+        val customerTest: Customer = CustomerTools.builderCustomer(id = idTest)
         every { customerRepository.findById(idTest) } returns Optional.of(customerTest)
         // when
         val actual: Customer = customerServiceImp.findById(idTest)
@@ -69,8 +70,8 @@ class CustomerServiceImpTest {
     fun shouldUpdateCustomer() {
         // given
         val idTest: Long = Random().nextLong()
-        val customerTest: Customer = Tools.builderCustomer()
-        val customerUpdateDTOTest: CustomerUpdateDTO = Tools.builderCustomerUpdateDTO()
+        val customerTest: Customer = CustomerTools.builderCustomer()
+        val customerUpdateDTOTest: CustomerUpdateDTO = CustomerTools.builderCustomerUpdateDTO()
         every { customerRepository.findById(idTest) } returns Optional.of(customerTest)
         every { customerRepository.save(any()) } returns customerTest
         // When
@@ -87,7 +88,7 @@ class CustomerServiceImpTest {
     fun shouldNotUpdateCostumerAndThrowCustomerNotFoundException() {
         // given
         val idTest: Long = Random().nextLong()
-        val customerUpdateDTOTest: CustomerUpdateDTO = Tools.builderCustomerUpdateDTO()
+        val customerUpdateDTOTest: CustomerUpdateDTO = CustomerTools.builderCustomerUpdateDTO()
         every { customerRepository.findById(idTest) } returns Optional.empty()
         // when - then
         Assertions.assertThatExceptionOfType(CustomerNotFoundException::class.java)
@@ -101,7 +102,7 @@ class CustomerServiceImpTest {
     fun shouldDeleteCustomerById() {
         // given
         val idTest: Long = Random().nextLong()
-        val customerTest: Customer = Tools.builderCustomer()
+        val customerTest: Customer = CustomerTools.builderCustomer()
         every { customerRepository.findById(idTest) } returns Optional.of(customerTest)
         every { customerRepository.deleteById(idTest) } just runs
         // when

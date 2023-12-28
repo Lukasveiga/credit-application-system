@@ -1,12 +1,36 @@
-package br.com.diobootcamp.credit.application.system.controllers.customer
+package br.com.diobootcamp.credit.application.system.tools
 
 import br.com.diobootcamp.credit.application.system.dto.customer.CustomerDTO
 import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateDTO
+import br.com.diobootcamp.credit.application.system.entities.Address
+import br.com.diobootcamp.credit.application.system.entities.Customer
 import java.math.BigDecimal
 
-internal class Tools {
+internal class CustomerTools {
 
     companion object {
+        fun builderCustomer(
+            firstName: String = "Lukas",
+            lastName: String = "Veiga",
+            cpf: String = "883.799.550-48",
+            email: String = "test@email.com",
+            password: String = "testPassword",
+            zipCode: String = "13545",
+            street: String = "Rua Dois Terços",
+            income: BigDecimal = BigDecimal(0),
+            id: Long = 1
+        ) = Customer(
+            firstName = firstName,
+            lastName = lastName,
+            cpf = cpf,
+            email = email,
+            password = password,
+            address = Address(
+                zipCode = zipCode,
+                street = street
+            ),
+            income = income,
+        )
 
         fun builderCustomerDTO(
             firstName: String = "Lukas",
@@ -34,12 +58,12 @@ internal class Tools {
             zipCode: String = "13545",
             street: String = "Rua Dois Terços",
             income: BigDecimal = BigDecimal(0)
-        ): CustomerUpdateDTO = CustomerUpdateDTO(
+        ) = CustomerUpdateDTO(
             firstName = firstName,
             lastName = lastName,
             zipCode = zipCode,
             street = street,
-            income = income,
+            income = income
         )
     }
 }

@@ -4,6 +4,7 @@ import br.com.diobootcamp.credit.application.system.dto.customer.CustomerDTO
 import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateDTO
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
+import br.com.diobootcamp.credit.application.system.tools.CustomerTools
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -55,7 +56,7 @@ class CustomerControllerIT {
     @Test
     fun shouldCreateCustomerAndReturn201StatusCode() {
         // given
-        val customerDTO: CustomerDTO = Tools.builderCustomerDTO()
+        val customerDTO: CustomerDTO = CustomerTools.builderCustomerDTO()
         val customerDTOAsString: String = objectMapper.writeValueAsString(customerDTO)
         // when - then
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
@@ -75,8 +76,8 @@ class CustomerControllerIT {
     @Test
     fun shouldNotSaveCustomerWithExistingCPFAndReturn409StatusCode() {
         // given
-        customerRepository.save(Tools.builderCustomerDTO().toEntity())
-        val customerDTO: CustomerDTO = Tools.builderCustomerDTO()
+        customerRepository.save(CustomerTools.builderCustomerDTO().toEntity())
+        val customerDTO: CustomerDTO = CustomerTools.builderCustomerDTO()
         val customerDTOAsString: String = objectMapper.writeValueAsString(customerDTO)
         // when - then
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
@@ -94,7 +95,7 @@ class CustomerControllerIT {
     @Test
     fun shouldNotSaveCustomerWithFirstNameEmptyAndReturn400StatusCode() {
         // given
-        val customerDTO: CustomerDTO = Tools.builderCustomerDTO(firstName = "")
+        val customerDTO: CustomerDTO = CustomerTools.builderCustomerDTO(firstName = "")
         val customerDTOAsString: String = objectMapper.writeValueAsString(customerDTO)
         // when - then
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
@@ -112,7 +113,7 @@ class CustomerControllerIT {
     @Test
     fun shouldFindCustomerByIdAndReturn200StatusCode() {
         // given
-        val customerDTO: CustomerDTO = Tools.builderCustomerDTO()
+        val customerDTO: CustomerDTO = CustomerTools.builderCustomerDTO()
         customerRepository.save(customerDTO.toEntity())
         val customerId: Long = 1L
         // when - then
@@ -148,7 +149,7 @@ class CustomerControllerIT {
     @Test
     fun shouldDeleteCustomerByIdAndReturn204StatusCode() {
         // given
-        val customerSaved: Customer = customerRepository.save(Tools.builderCustomerDTO().toEntity())
+        val customerSaved: Customer = customerRepository.save(CustomerTools.builderCustomerDTO().toEntity())
         // when - then
         mockMvc.perform(MockMvcRequestBuilders.delete("$URL/${customerSaved.id}")
             .accept(MediaType.APPLICATION_JSON))
@@ -175,8 +176,8 @@ class CustomerControllerIT {
     @Test
     fun shouldUpdateCustomerAndReturn200StatusCode() {
         // given
-        val customerSaved: Customer = customerRepository.save(Tools.builderCustomerDTO().toEntity())
-        val customerUpdateDTO: CustomerUpdateDTO = Tools.builderCustomerUpdateDTO()
+        val customerSaved: Customer = customerRepository.save(CustomerTools.builderCustomerDTO().toEntity())
+        val customerUpdateDTO: CustomerUpdateDTO = CustomerTools.builderCustomerUpdateDTO()
         val customerUpdateDTOAsString: String = objectMapper.writeValueAsString(customerUpdateDTO)
         // when - then
         mockMvc.perform(MockMvcRequestBuilders.patch("$URL?customerId=${customerSaved.id}")
@@ -195,7 +196,7 @@ class CustomerControllerIT {
     fun shouldNotUpdateCustomerAndReturn404StatusCode() {
         // given
         val invalidId: Long = Random.nextLong()
-        val customerUpdateDTO: CustomerUpdateDTO = Tools.builderCustomerUpdateDTO()
+        val customerUpdateDTO: CustomerUpdateDTO = CustomerTools.builderCustomerUpdateDTO()
         val customerUpdateDTOAsString: String = objectMapper.writeValueAsString(customerUpdateDTO)
         // when - then
         mockMvc.perform(MockMvcRequestBuilders.patch("$URL?customerId=$invalidId")
