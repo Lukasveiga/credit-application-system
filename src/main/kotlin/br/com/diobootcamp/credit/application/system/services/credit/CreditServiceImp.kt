@@ -3,7 +3,6 @@ package br.com.diobootcamp.credit.application.system.services.credit
 import br.com.diobootcamp.credit.application.system.entities.Credit
 import br.com.diobootcamp.credit.application.system.repositories.CreditRepository
 import br.com.diobootcamp.credit.application.system.services.customer.CustomerService
-import br.com.diobootcamp.credit.application.system.services.exceptions.BusinessExcetion
 import br.com.diobootcamp.credit.application.system.services.exceptions.CreditNotFoundException
 import br.com.diobootcamp.credit.application.system.services.exceptions.InvalidDayFirstOfInstallmentException
 import org.springframework.stereotype.Service

@@ -3,7 +3,6 @@ package br.com.diobootcamp.credit.application.system.services.customer
 import br.com.diobootcamp.credit.application.system.dto.customer.CustomerUpdateDTO
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
-import br.com.diobootcamp.credit.application.system.services.exceptions.BusinessExcetion
 import br.com.diobootcamp.credit.application.system.services.exceptions.CustomerNotFoundException
 import org.springframework.stereotype.Service
 

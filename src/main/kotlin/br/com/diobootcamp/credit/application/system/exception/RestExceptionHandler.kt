@@ -1,6 +1,8 @@
 package br.com.diobootcamp.credit.application.system.exception
 
-import br.com.diobootcamp.credit.application.system.services.exceptions.BusinessExcetion
+import br.com.diobootcamp.credit.application.system.services.exceptions.CreditNotFoundException
+import br.com.diobootcamp.credit.application.system.services.exceptions.CustomerNotFoundException
+import br.com.diobootcamp.credit.application.system.services.exceptions.InvalidDayFirstOfInstallmentException
 import org.springframework.dao.DataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -47,8 +49,8 @@ class RestExceptionHandler {
         )
     }
 
-    @ExceptionHandler(BusinessExcetion::class)
-    fun handlerBusinessExceptions(ex: BusinessExcetion): ResponseEntity<ExceptionDetails> {
+    @ExceptionHandler(InvalidDayFirstOfInstallmentException::class)
+    fun handlerBusinessExceptions(ex: InvalidDayFirstOfInstallmentException): ResponseEntity<ExceptionDetails> {
         return ResponseEntity(
             ExceptionDetails(
                 title = "Bad Request. Consult documentation",
@@ -57,6 +59,19 @@ class RestExceptionHandler {
                 exception = ex.javaClass.simpleName.toString(),
                 details = mutableMapOf(ex.cause.toString() to ex.message.toString())
             ), HttpStatus.BAD_REQUEST
+        )
+    }
+
+    @ExceptionHandler(CreditNotFoundException::class, CustomerNotFoundException::class)
+    fun handlerNotFoundExceptions(ex: RuntimeException): ResponseEntity<ExceptionDetails> {
+        return ResponseEntity(
+            ExceptionDetails(
+                title = "Not found exception",
+                timestamp = LocalDateTime.now(),
+                status = HttpStatus.NOT_FOUND.value(),
+                exception = ex.javaClass.simpleName.toString(),
+                details = mutableMapOf(ex.cause.toString() to ex.message.toString())
+            ), HttpStatus.NOT_FOUND
         )
     }
 
