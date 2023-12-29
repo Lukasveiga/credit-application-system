@@ -3,6 +3,7 @@ package br.com.diobootcamp.credit.application.system.controllers.credit
 import br.com.diobootcamp.credit.application.system.controllers.IntegrationTestConfig
 import br.com.diobootcamp.credit.application.system.controllers.customer.CustomerControllerIT
 import br.com.diobootcamp.credit.application.system.dto.credit.CreditDTO
+import br.com.diobootcamp.credit.application.system.entities.Credit
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CreditRepository
 import br.com.diobootcamp.credit.application.system.repositories.CustomerRepository
@@ -116,6 +117,24 @@ class CreditControllerIT: IntegrationTestConfig() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$").isArray)
             .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun shouldFindCreditByCreditCode() {
+        // given
+        val credit: Credit = CreditTools.builderCreditDTO(customerId = 1).toEntity()
+        creditRepository.save(credit)
+        // when - then
+        mockMvc.perform(MockMvcRequestBuilders.get("$URL/credit/${credit.creditCode}?customerId=${1}")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.creditCode").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.creditValue").value(credit.creditValue))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.numberOfInstallments").value(credit.numberOfInstallment))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.emailCustomer").value(customerTest.email))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.incomeCustomer").value(customerTest.income.longValueExact()))
             .andDo(MockMvcResultHandlers.print())
     }
 }
