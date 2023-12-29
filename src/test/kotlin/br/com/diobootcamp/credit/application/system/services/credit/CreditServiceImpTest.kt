@@ -4,14 +4,17 @@ import br.com.diobootcamp.credit.application.system.entities.Credit
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CreditRepository
 import br.com.diobootcamp.credit.application.system.services.customer.CustomerService
+import br.com.diobootcamp.credit.application.system.services.exceptions.InvalidDayFirstOfInstallmentException
 import br.com.diobootcamp.credit.application.system.tools.CreditTools
 import br.com.diobootcamp.credit.application.system.tools.CustomerTools
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.time.LocalDate
 
 @ExtendWith(MockKExtension::class)
 class CreditServiceImpTest {
@@ -33,5 +36,17 @@ class CreditServiceImpTest {
         val creditSaved: Credit = creditServiceImp.save(creditTest)
         // then
         Assertions.assertThat(creditSaved).isNotNull
+    }
+
+    @Test
+    fun shouldNotCreateCreditWithInvalidDayFirstInstallment() {
+        // given
+        val customerTest: Customer = CustomerTools.builderCustomer(id = 1)
+        val creditTest: Credit = CreditTools.builderCredit(customer = customerTest, dayFirstInstallment = LocalDate.now().plusMonths(3))
+        // when - then
+        Assertions.assertThatExceptionOfType(InvalidDayFirstOfInstallmentException::class.java)
+            .isThrownBy { creditServiceImp.save(creditTest) }
+            .withMessage("Day first of installment has to be maximum three months ahead")
+        verify(exactly = 0) { creditRepository.save(creditTest) }
     }
 }
