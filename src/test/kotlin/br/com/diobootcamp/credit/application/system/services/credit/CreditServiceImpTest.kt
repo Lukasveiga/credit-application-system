@@ -49,4 +49,19 @@ class CreditServiceImpTest {
             .withMessage("Day first of installment has to be maximum three months ahead")
         verify(exactly = 0) { creditRepository.save(creditTest) }
     }
+
+    @Test
+    fun shouldFindAllCreditsByCustomer() {
+        // given
+        val customerTest: Customer = CustomerTools.builderCustomer(id = 1)
+        val creditTest: Credit = CreditTools.builderCredit(customer = customerTest)
+        every { creditRepository.findAllByCustomerId(any()) } returns mutableListOf(creditTest)
+        // when
+        val creditList: List<Credit> = creditServiceImp.findAllByCustomer(customerTest.id!!)
+        // then
+        Assertions.assertThat(creditList).isNotEmpty
+        Assertions.assertThat(creditList.size).isEqualTo(1)
+        Assertions.assertThat(creditList[0]).isSameAs(creditTest)
+
+    }
 }
