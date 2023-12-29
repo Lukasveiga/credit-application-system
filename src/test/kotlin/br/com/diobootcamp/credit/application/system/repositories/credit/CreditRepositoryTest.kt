@@ -29,7 +29,7 @@ class CreditRepositoryTest {
 
     @BeforeEach
     fun setUp() {
-        customer = testEntityManager.persist(CustomerTools.builderCustomer())
+        customer = testEntityManager.persist(CustomerTools.builderCustomer(id = null))
         credit1 = testEntityManager.persist(CreditTools.builderCredit(customer = customer))
         credit2 = testEntityManager.persist(CreditTools.builderCredit(customer = customer))
     }
