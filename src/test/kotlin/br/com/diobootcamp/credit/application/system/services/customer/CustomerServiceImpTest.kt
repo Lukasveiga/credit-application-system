@@ -43,7 +43,7 @@ class CustomerServiceImpTest {
     fun shouldFindCustomerById() {
         // given
         val idTest: Long = Random().nextLong()
-        val customerTest: Customer = CustomerTools.builderCustomer(id = idTest)
+        val customerTest: Customer = CustomerTools.builderCustomer()
         every { customerRepository.findById(idTest) } returns Optional.of(customerTest)
         // when
         val actual: Customer = customerServiceImp.findById(idTest)
