@@ -18,7 +18,7 @@ internal class CustomerTools {
             zipCode: String = "13545",
             street: String = "Rua Dois Terços",
             income: BigDecimal = BigDecimal(0),
-            id: Long = 1
+            id: Long? = 1
         ) = Customer(
             firstName = firstName,
             lastName = lastName,
@@ -30,6 +30,7 @@ internal class CustomerTools {
                 street = street
             ),
             income = income,
+            id = id
         )
 
         fun builderCustomerDTO(
