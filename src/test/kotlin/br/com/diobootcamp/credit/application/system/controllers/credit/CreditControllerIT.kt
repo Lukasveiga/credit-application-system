@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import java.util.UUID
 
 class CreditControllerIT: IntegrationTestConfig() {
 
@@ -135,6 +136,24 @@ class CreditControllerIT: IntegrationTestConfig() {
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").exists())
             .andExpect(MockMvcResultMatchers.jsonPath("$.emailCustomer").value(customerTest.email))
             .andExpect(MockMvcResultMatchers.jsonPath("$.incomeCustomer").value(customerTest.income.longValueExact()))
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun shouldNotFindCreditByCreditCodeWithInvalidCreditCode() {
+        // given
+        val invalidCreditCode: UUID = UUID.randomUUID()
+        val credit: Credit = CreditTools.builderCreditDTO(customerId = 1).toEntity()
+        creditRepository.save(credit)
+        // when - then
+        mockMvc.perform(MockMvcRequestBuilders.get("$URL/credit/${invalidCreditCode}?customerId=${1}")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isNotFound)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Not found exception"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.exception").value("CreditNotFoundException"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.details[*]").isNotEmpty)
             .andDo(MockMvcResultHandlers.print())
     }
 }
