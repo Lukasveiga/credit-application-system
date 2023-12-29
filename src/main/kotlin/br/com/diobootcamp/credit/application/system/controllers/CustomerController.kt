@@ -77,8 +77,7 @@ class CustomerController(private val customerService: CustomerService) {
     }
 
     @ApiResponses(
-        ApiResponse(responseCode = "200", description = "Customer Deleted",
-            content = arrayOf(Content(mediaType = "application/json", schema = Schema(implementation = CustomerView::class)))),
+        ApiResponse(responseCode = "200", description = "Customer Deleted"),
         ApiResponse(responseCode = "404", description = "Customer not found",
             content = arrayOf(Content(mediaType = "application/json", schema = Schema(implementation = ExceptionDetails::class)))
         )
