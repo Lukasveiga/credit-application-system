@@ -91,4 +91,17 @@ class CreditServiceImpTest {
             .isThrownBy { creditServiceImp.findByCreditCode(anyCustomerId, invalidCreditCode) }
             .withMessage("Credit code $invalidCreditCode not found")
     }
+
+    @Test
+    fun shouldNotFindCreditByCustomerIdAndCreditCodeWithInvalidCustomerId() {
+        // given
+        val invalidCustomerId: Long = Random().nextLong()
+        val customerTest: Customer = CustomerTools.builderCustomer(id = 1)
+        val creditTest: Credit = CreditTools.builderCredit(customer = customerTest)
+        every { creditRepository.findByCreditCode(creditTest.creditCode) } returns creditTest
+        // when - then
+        Assertions.assertThatExceptionOfType(CreditNotFoundException::class.java)
+            .isThrownBy { creditServiceImp.findByCreditCode(invalidCustomerId, creditTest.creditCode) }
+            .withMessage("Credit code ${creditTest.creditCode} not found")
+    }
 }
