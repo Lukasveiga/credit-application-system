@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -68,6 +69,25 @@ class CreditControllerIT: IntegrationTestConfig() {
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").exists())
             .andExpect(MockMvcResultMatchers.jsonPath("$.emailCustomer").value(customerTest.email))
             .andExpect(MockMvcResultMatchers.jsonPath("$.incomeCustomer").value(customerTest.income.longValueExact()))
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun shouldNotCreateCreditAndReturn404StatusCodeWhenInvalidNumberOfInstallmentsIsProvided() {
+        // given
+        val creditDTO: CreditDTO = CreditTools.builderCreditDTO(customerId = 1, numberOfInstallments = 49)
+        val creditDTOAsString: String = objectMapper.writeValueAsString(creditDTO)
+        // when
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(creditDTOAsString))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Bad Request. Consult documentation"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.exception").value("MethodArgumentNotValidException"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.details[*]").isNotEmpty)
             .andDo(MockMvcResultHandlers.print())
     }
 }
