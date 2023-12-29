@@ -57,7 +57,7 @@ class CreditControllerIT: IntegrationTestConfig() {
         // given
         val creditDTO: CreditDTO = CreditTools.builderCreditDTO(customerId = 1)
         val creditDTOAsString: String = objectMapper.writeValueAsString(creditDTO)
-        // when
+        // when - then
         mockMvc.perform(
             MockMvcRequestBuilders.post(URL)
             .contentType(MediaType.APPLICATION_JSON)
@@ -77,7 +77,7 @@ class CreditControllerIT: IntegrationTestConfig() {
         // given
         val creditDTO: CreditDTO = CreditTools.builderCreditDTO(customerId = 1, numberOfInstallments = 49)
         val creditDTOAsString: String = objectMapper.writeValueAsString(creditDTO)
-        // when
+        // when - then
         mockMvc.perform(
             MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -88,6 +88,23 @@ class CreditControllerIT: IntegrationTestConfig() {
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.exception").value("MethodArgumentNotValidException"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.details[*]").isNotEmpty)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun shouldFindAllCreditsByCustomerId() {
+        // given
+        val creditDTO: CreditDTO = CreditTools.builderCreditDTO(customerId = 1)
+        creditRepository.save(creditDTO.toEntity())
+        // when - then
+        mockMvc.perform(MockMvcRequestBuilders.get("$URL/${1}")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$").isArray)
+            .andExpect(MockMvcResultMatchers.jsonPath("$").isNotEmpty)
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].creditCode").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].creditValue").value(creditDTO.creditValue))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].numberOfInstallments").value(creditDTO.numberOfInstallments))
             .andDo(MockMvcResultHandlers.print())
     }
 }
