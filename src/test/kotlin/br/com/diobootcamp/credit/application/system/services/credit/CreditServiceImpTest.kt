@@ -51,7 +51,7 @@ class CreditServiceImpTest {
     }
 
     @Test
-    fun shouldFindAllCreditsByCustomer() {
+    fun shouldFindAllCreditsByCustomerId() {
         // given
         val customerTest: Customer = CustomerTools.builderCustomer(id = 1)
         val creditTest: Credit = CreditTools.builderCredit(customer = customerTest)
@@ -62,6 +62,18 @@ class CreditServiceImpTest {
         Assertions.assertThat(creditList).isNotEmpty
         Assertions.assertThat(creditList.size).isEqualTo(1)
         Assertions.assertThat(creditList[0]).isSameAs(creditTest)
+    }
 
+    @Test
+    fun shouldfindCreditByCustomerIdAndCreditCode() {
+        // given
+        val customerTest: Customer = CustomerTools.builderCustomer(id = 1)
+        val creditTest: Credit = CreditTools.builderCredit(customer = customerTest)
+        every { creditRepository.findByCreditCode(creditTest.creditCode) } returns creditTest
+        // when
+        val creditActual: Credit = creditServiceImp.findByCreditCode(customerTest.id!!, creditTest.creditCode)
+        // then
+        Assertions.assertThat(creditActual).isNotNull
+        Assertions.assertThat(creditActual).isSameAs(creditTest)
     }
 }
