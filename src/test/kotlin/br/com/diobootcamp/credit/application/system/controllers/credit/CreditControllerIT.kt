@@ -107,4 +107,15 @@ class CreditControllerIT: IntegrationTestConfig() {
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].numberOfInstallments").value(creditDTO.numberOfInstallments))
             .andDo(MockMvcResultHandlers.print())
     }
+
+    @Test
+    fun shouldNotFindAllCreditsByCustomerId() {
+        // when - then
+        mockMvc.perform(MockMvcRequestBuilders.get("$URL/${1}")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$").isArray)
+            .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty)
+            .andDo(MockMvcResultHandlers.print())
+    }
 }
