@@ -32,6 +32,6 @@ class CreditServiceImp(private val creditRepository: CreditRepository, private v
 
     private fun validateDayFirstOfInstallment(dayFirstOfInstallment: LocalDate): Boolean {
         return if (dayFirstOfInstallment.isBefore(LocalDate.now().plusMonths(3))) true
-        else throw InvalidDayFirstOfInstallmentException("Day first of installment has to be at least three months ahead")
+        else throw InvalidDayFirstOfInstallmentException("Day first of installment has to be maximum three months ahead")
     }
 }
