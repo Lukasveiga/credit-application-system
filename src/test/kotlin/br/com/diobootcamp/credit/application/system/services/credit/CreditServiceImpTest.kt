@@ -4,6 +4,7 @@ import br.com.diobootcamp.credit.application.system.entities.Credit
 import br.com.diobootcamp.credit.application.system.entities.Customer
 import br.com.diobootcamp.credit.application.system.repositories.CreditRepository
 import br.com.diobootcamp.credit.application.system.services.customer.CustomerService
+import br.com.diobootcamp.credit.application.system.services.exceptions.CreditNotFoundException
 import br.com.diobootcamp.credit.application.system.services.exceptions.InvalidDayFirstOfInstallmentException
 import br.com.diobootcamp.credit.application.system.tools.CreditTools
 import br.com.diobootcamp.credit.application.system.tools.CustomerTools
@@ -15,6 +16,8 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDate
+import java.util.Random
+import java.util.UUID
 
 @ExtendWith(MockKExtension::class)
 class CreditServiceImpTest {
@@ -65,7 +68,7 @@ class CreditServiceImpTest {
     }
 
     @Test
-    fun shouldfindCreditByCustomerIdAndCreditCode() {
+    fun shouldFindCreditByCustomerIdAndCreditCode() {
         // given
         val customerTest: Customer = CustomerTools.builderCustomer(id = 1)
         val creditTest: Credit = CreditTools.builderCredit(customer = customerTest)
@@ -75,5 +78,17 @@ class CreditServiceImpTest {
         // then
         Assertions.assertThat(creditActual).isNotNull
         Assertions.assertThat(creditActual).isSameAs(creditTest)
+    }
+
+    @Test
+    fun shouldNotFindCreditByCustomerIdAndCreditCodeWithInvalidCreditCode() {
+        // given
+        val anyCustomerId: Long = Random().nextLong()
+        val invalidCreditCode: UUID = UUID.randomUUID()
+        every { creditRepository.findByCreditCode(invalidCreditCode) } returns null
+        // when - then
+        Assertions.assertThatExceptionOfType(CreditNotFoundException::class.java)
+            .isThrownBy { creditServiceImp.findByCreditCode(anyCustomerId, invalidCreditCode) }
+            .withMessage("Credit code $invalidCreditCode not found")
     }
 }
