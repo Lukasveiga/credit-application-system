@@ -156,4 +156,21 @@ class CreditControllerIT: IntegrationTestConfig() {
             .andExpect(MockMvcResultMatchers.jsonPath("$.details[*]").isNotEmpty)
             .andDo(MockMvcResultHandlers.print())
     }
+
+    @Test
+    fun shouldNotFindCreditByCreditCodeWithInvalidCustomerId() {
+        // given
+        val credit: Credit = CreditTools.builderCreditDTO(customerId = 1).toEntity()
+        creditRepository.save(credit)
+        // when - then
+        mockMvc.perform(MockMvcRequestBuilders.get("$URL/credit/${credit.creditCode}?customerId=${5}")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isNotFound)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Not found exception"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.exception").value("CreditNotFoundException"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.details[*]").isNotEmpty)
+            .andDo(MockMvcResultHandlers.print())
+    }
 }
