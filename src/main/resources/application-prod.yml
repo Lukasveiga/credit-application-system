@@ -12,3 +12,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   flyway:
     locations: classpath:db/postgresql
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
