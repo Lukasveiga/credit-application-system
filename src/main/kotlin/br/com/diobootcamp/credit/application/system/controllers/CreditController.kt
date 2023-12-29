@@ -21,10 +21,10 @@ import java.util.UUID
 class CreditController(private val creditService: CreditService) {
 
     @PostMapping
-    fun saveCredit(@RequestBody @Valid creditDTO: CreditDTO): ResponseEntity<String> {
+    fun saveCredit(@RequestBody @Valid creditDTO: CreditDTO): ResponseEntity<CreditView> {
         val credit = this.creditService.save(creditDTO.toEntity())
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body("Credit ${credit.creditCode} - Customer ${credit.customer?.firstName} saved")
+            .body(CreditView(credit))
     }
 
     @GetMapping("/{customerId}")
